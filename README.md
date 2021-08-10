@@ -1,5 +1,5 @@
 # Strive Blog REST API Backend
-Here I have created a set of WebAPIs for strive blog application. 
+Here I have created a set of WebAPIs for <a href="https://strive-blog-template.netlify.app/"> strive blog application</a>. 
 
 In This application we can create author, edit author, delete author, listing of blog authors
 
