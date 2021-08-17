@@ -9,7 +9,7 @@ import {join} from 'path'
 
 const server = express()
 
-const port = 3001
+const port = process.env.PORT
 
 //Middleware
 const loggerMiddleware=(req,res,next)=>{

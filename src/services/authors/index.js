@@ -4,14 +4,16 @@ import createHttpError from 'http-errors'
 import {getAuthors,writeAuthor,saveAuthorPicture,publicAuthorsFolderPath} from '../../lib/fs-tools.js'
 import multer from 'multer'
 import {join} from 'path'
+import {authorValidations} from './validation.js'
+import { validationResult } from "express-validator";
 
 const authorsRouter = express.Router() //authors router
 
 
-authorsRouter.post("/", async(request, response,next) => {
+authorsRouter.post("/",authorValidations, async(request, response,next) => {
   try{
     const errorList=validationResult(request)
-    
+    console.log(errorList)
     if(!errorList.isEmpty()){
         next(createHttpError(400,{errorList}))
         
@@ -25,6 +27,7 @@ authorsRouter.post("/", async(request, response,next) => {
 
   }catch(error){
       next(error)
+      console.log(error)
   }
 })
 //for avator upload
@@ -70,14 +73,21 @@ authorsRouter.get("/:authorID", async(request, response,next) => {
   }
 })
 
-authorsRouter.put("/:authorID", async(request, response,next) => {
+authorsRouter.put("/:authorID",authorValidations, async(request, response,next) => {
   try{
+    const errorList=validationResult(request)
+        
+    if(!errorList.isEmpty()){
+        next(createHttpError(400,{errorList}))
+        
+    }else{
         const authors=await getAuthors()
         const remainingAuthors=authors.filter(a =>a.id !== request.params.authorID)
         const currentAuthor={... request.body, id:request.params.authorID}
         remainingAuthors.push(currentAuthor)
         await writeAuthor(remainingAuthors)
         response.send(currentAuthor)
+    }
     
   }catch(error){
       next(error)

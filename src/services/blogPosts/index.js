@@ -37,7 +37,7 @@ blogPostRouter.get("/:id",async(request,response,next)=>{
 blogPostRouter.post("/",blogPostValidations, async(request,response,next)=>{
     try{
         const errorList=validationResult(request)
-        
+        console.log(errorList)
         if(!errorList.isEmpty()){
             next(createHttpError(400,{errorList}))
             
@@ -52,6 +52,7 @@ blogPostRouter.post("/",blogPostValidations, async(request,response,next)=>{
 
     }catch(error){
         next(error)
+        console.log(error)
     }
 })
 
