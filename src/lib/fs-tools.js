@@ -1,6 +1,10 @@
 import fs from 'fs-extra'
 import { fileURLToPath } from 'url'
 import { dirname,join } from 'path'
+import { cwd } from "process";
+
+export const authorsImgFdrPath = join(cwd(), "public/img/authors")
+export const blogPostsImgFdrPath = join(cwd(), "public/img/blogPosts")
 
 const {readJSON, writeJSON, writeFile}=fs
 const authorJSONPath=join(dirname(fileURLToPath(import.meta.url)),"../data/authors.json")

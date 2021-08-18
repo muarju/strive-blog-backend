@@ -99,7 +99,6 @@ blogPostRouter.delete("/:id",async(request,response,next)=>{
         if(!post){
             next(createHttpError(404), { message: `Blog Post requested with ${request.params.id} is not found` })
         }else{
-            const posts=getPost()
             const remainingPosts=posts.filter(post => post.id !== request.params.id)
             await writePost(remainingPosts)
             response.status(204).send()

@@ -5,7 +5,7 @@ import blogPostRouter from './services/blogPosts/index.js'
 import fileRouter from './services/files/index.js'
 import {notFoundErrorHandler,forbiddenErrorHandler, badRequestErrorHandler,serverErrorHandler} from './errorHandler.js'
 import cors from 'cors'
-import {join} from 'path'
+import { authorsImgFdrPath, blogPostsImgFdrPath } from './lib/fs-tools.js'
 
 const server = express()
 
@@ -26,15 +26,28 @@ const authenticationMiddleware=(req,res,next)=>{
   }
 }
 
-const publicFolderPath=join(process.cwd(), "public")
+// Set trustable origin
+const listTrustableOrigins = [process.env.FE_DEV_TRUST_URL, process.env.FE_PROD_TRUST_URL]
+
+const setCorsConfig = {
+    origin: function(origin, callback){
+        if(!origin || listTrustableOrigins.includes(origin)){
+            callback(null, true)
+        } else{
+            callback(new Error('Origin not allowed'))
+        }
+    }
+}
+
 
 
 //Global Middleware
-server.use(express.static(publicFolderPath))
+server.use(express.static(authorsImgFdrPath))
+server.use(express.static(blogPostsImgFdrPath))
 server.use(loggerMiddleware)
 server.use(authenticationMiddleware)
-server.use(cors())
-server.use(express.json())
+server.use(cors(setCorsConfig))
+server.use(express.json({limit:"50mb"}))
 
 // *************** ROUTES *****************
 server.use("/authors", authorsRouter)
