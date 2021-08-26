@@ -13,5 +13,20 @@
         },
         "content": "We're thrilled to announce we're teaming up with Mimo to launch our next Web Engineering program starting on February 1, 2021. <br>Mimo is the most popular code-learning app, helping millions of learners make their first steps with programming.<br>Since the first time we talked, we realised we have been in fact working in the very same direction: democratising access to become a software engineer. <br>We're now teaming up to help those in their community that have realised they truly love programming and aspire to become professionals - able to work as software engineers and transform a hobby and passion in their profession.<br> Democratising access to opportunity - either by making it simple to move the first steps and explore the world of programming as Mimo does, or by helping people go pro as we do at Strive School - is what makes both teams excited. <br> Download Mimo for iOS or Android here. <br> Apply here to our next Web Engineering cohort.",
         "id": "wcz3w840ks7sa379"
+    },
+    {
+        "category": "Pogramming 3",
+        "title": "From 'Hello World' to Getting Hired as Software Engineer: Strive School meets Mimo 1",
+        "cover": "https://striveschool.ghost.io/content/images/2020/12/M1M06-3.png",
+        "readTime": {
+            "value": 3,
+            "unit": "minute"
+        },
+        "author": {
+            "name": "Tobia De Angelis",
+            "avatar": "https://striveschool.ghost.io/content/images/2020/12/tobia_mymoji.jpg"
+        },
+        "content": "We're thrilled to announce we're teaming up with Mimo to launch our next Web Engineering program starting on February 1, 2021. <br>Mimo is the most popular code-learning app, helping millions of learners make their first steps with programming.<br>Since the first time we talked, we realised we have been in fact working in the very same direction: democratising access to become a software engineer.",
+        "id": "wcz3w5z0ksizk7mq"
     }
 ]

@@ -1,1 +1,21 @@
-[{"id":"wcz3w4gcks62e8qu","avatar":"F:\\Strive School\\FS-May21\\m5-d2\\strive-blog-backend\\public\\img\\authors\\wcz3w4gcks62e8qu","name":"Muslim","surname":"Arju","email":"arju@gmail.com","dob":"1995-09-28","createdAt":"2021-08-10T12:53:28.134Z"},{"avatar":"avatar.jpg","name":"test 1","surname":"test 1","email":"test@gmail.com","dob":"1995-09-01","id":"wcz3w9y0ksg1ts7v"},{"avatar":"avatar2.jpg","name":"test 2","surname":"test 2","email":"test2@gmail.com","dob":"1995-09-02","id":"wcz3w9y0ksg1vfbq","createdAt":"2021-08-17T12:36:31.959Z"}]
+[
+    {
+        "id": "wcz3w4gcks62e8qu",
+        "avatar": "http://localhost:3001/img/wcz3w4gcks62e8qu.png",
+        "name": "Muslim",
+        "surname": "Arju",
+        "email": "arju@gmail.com",
+        "dob": "1995-09-28",
+        "createdAt": "2021-08-10T12:53:28.134Z",
+        "updatedAt": "2021-08-19T14:18:08.998Z"
+    },
+    {
+        "id": "wcz3w5z0ksizg06d",
+        "avatar": "http://localhost:3001/wcz3w5z0ksizg06d.jpg",
+        "name": "John",
+        "surname": "Doe",
+        "email": "John@Doe.com",
+        "dob": "1995-01-01",
+        "createdAt": "2021-08-19T13:51:51.780Z"
+    }
+]

@@ -1,11 +1,12 @@
 import express from "express"
 import uniqid from "uniqid"
 import createHttpError from 'http-errors'
-import {getAuthors,writeAuthor,saveAuthorPicture,publicAuthorsFolderPath} from '../../lib/fs-tools.js'
+import {getAuthors,writeAuthor,savePicture,authorJSONPath} from '../../lib/fs-tools.js'
 import multer from 'multer'
-import {join} from 'path'
+import {extname} from 'path'
 import {authorValidations} from './validation.js'
 import { validationResult } from "express-validator";
+import fs from "fs";
 
 const authorsRouter = express.Router() //authors router
 
@@ -31,17 +32,30 @@ authorsRouter.post("/",authorValidations, async(request, response,next) => {
   }
 })
 //for avator upload
-authorsRouter.post("/:id/uploadAvatar",multer().single("avatar"), async(request, response,next) => {
+authorsRouter.put("/:id/uploadAvatar",multer().single("avatar"), async(request, response,next) => {
   try{
-        await saveAuthorPicture(request.file.originalname,request.file.buffer)
-        
-        const authors=await getAuthors()
-        const author=authors.find(a=>a.id===request.params.id)
-        const remainingAuthors=authors.filter(a =>a.id !== request.params.id)
-        const currentAuthor={... request.body, id:request.params.id,avatar:join(publicAuthorsFolderPath,request.file.originalname),name:author.name,surname:author.surname,email:author.email,dob:author.dob,createdAt:author.createdAt }
-        remainingAuthors.push(currentAuthor)
-        await writeAuthor(remainingAuthors)
-        response.send(currentAuthor)
+        const { originalname, buffer } = request.file;
+        const extension = extname(originalname);
+        const fileName = `${request.params.id}${extension}`;
+        await savePicture(fileName,buffer)
+        const link = `http://localhost:3001/img/${fileName}`;
+        request.file = link;
+
+        const fileAsBuffer = fs.readFileSync(authorJSONPath);
+        const fileAsString = fileAsBuffer.toString();
+        let fileAsJSONArray = JSON.parse(fileAsString);
+        const authorIndex = fileAsJSONArray.findIndex(
+          (author) => author.id === request.params.id
+        );
+        if (!authorIndex == -1) {
+          response.status(404).send({ message: `Author with ${request.params.id} is not found!` });
+        }
+        const previousAuthorData = fileAsJSONArray[authorIndex];
+        const changedAuthor = {... previousAuthorData,avatar: request.file,updatedAt: new Date(),id: request.params.id};
+        fileAsJSONArray[authorIndex] = changedAuthor;
+        fs.writeFileSync(authorJSONPath, JSON.stringify(fileAsJSONArray));
+        response.send(changedAuthor);
+
   }catch(error){
       next(error)
   }

@@ -3,9 +3,10 @@ import uniqid from 'uniqid'
 import {blogPostValidations} from './validations.js'
 import createHttpError from 'http-errors'
 import { validationResult } from "express-validator";
-import {getPost,writePost,publicBlogFolderPath,saveBlogPicture} from '../../lib/fs-tools.js'
+import {getPost,writePost,savePicture,blogPostJSONPath} from '../../lib/fs-tools.js'
 import multer from 'multer'
-import {join} from 'path'
+import fs from "fs";
+import {extname} from 'path'
 
 
 const blogPostRouter=express.Router();
@@ -57,17 +58,32 @@ blogPostRouter.post("/",blogPostValidations, async(request,response,next)=>{
 })
 
 //for Cover upload
-blogPostRouter.post("/:id/uploadCover",multer().single("cover"), async(request, response,next) => {
+blogPostRouter.put("/:id/cover",multer().single("cover"), async(request, response,next) => {
   try{
-        await saveBlogPicture(request.file.originalname,request.file.buffer)
         
-        const posts=await getPost()
-        const post=posts.find(p=>p.id===request.params.id)
-        const remainingPosts=posts.filter(p =>p.id !== request.params.id)
-        const currentPost={... request.body, id:request.params.id,cover:join(publicBlogFolderPath,request.file.originalname)}
-        remainingPosts.push(currentPost)
-        await writeAuthor(remainingPosts)
-        response.send(currentPost)
+    const { originalname, buffer } = request.file
+    const extension = extname(originalname)
+    const fileName = `${request.params.id}${extension}`
+    await savePicture(fileName,buffer)
+    const link = `http://localhost:3001/img/${fileName}`
+    request.file = link
+
+    const fileAsBuffer = fs.readFileSync(blogPostJSONPath)
+    const fileAsString = fileAsBuffer.toString()
+    let fileAsJSONArray = JSON.parse(fileAsString)
+   
+    const PostIndex = fileAsJSONArray.findIndex((post) => post.id === request.params.id)
+    if (!postIndex == -1) {
+      response.status(404).send({ message: `Post with ${request.params.id} is not found!` })
+    }
+    const previousPostData = fileAsJSONArray[PostIndex]
+    console.log(previousPostData)
+    const changedPost = {...previousPostData,cover: request.file,updatedAt: new Date(),id: request.params.id}
+   
+    fileAsJSONArray[postIndex] = changedPost;
+    fs.writeFileSync(blogPostJSONPath, JSON.stringify(fileAsJSONArray));
+    response.send(changedPost);
+
   }catch(error){
       next(error)
   }

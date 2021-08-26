@@ -2,10 +2,9 @@ import express from "express"
 import listEndpoints from "express-list-endpoints"
 import authorsRouter from "./services/authors/index.js"
 import blogPostRouter from './services/blogPosts/index.js'
-import fileRouter from './services/files/index.js'
 import {notFoundErrorHandler,forbiddenErrorHandler, badRequestErrorHandler,serverErrorHandler} from './errorHandler.js'
 import cors from 'cors'
-import { authorsImgFdrPath, blogPostsImgFdrPath } from './lib/fs-tools.js'
+import {publicImgFolderPath} from './lib/fs-tools.js'
 
 const server = express()
 
@@ -39,11 +38,8 @@ const setCorsConfig = {
     }
 }
 
-
-
 //Global Middleware
-server.use(express.static(authorsImgFdrPath))
-server.use(express.static(blogPostsImgFdrPath))
+server.use(express.static(publicImgFolderPath))
 server.use(loggerMiddleware)
 server.use(authenticationMiddleware)
 server.use(cors(setCorsConfig))
@@ -52,7 +48,6 @@ server.use(express.json({limit:"50mb"}))
 // *************** ROUTES *****************
 server.use("/authors", authorsRouter)
 server.use("/blogPost", blogPostRouter)
-server.use("/files", fileRouter)
 
 //error Middleware
 server.use(notFoundErrorHandler)
